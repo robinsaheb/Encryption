@@ -223,7 +223,7 @@ class ConvergentEncryption(object):
                 id: hash(hash(block), block ID
                 ciphertext: enc(key, block)
         """
-        assert(isinstance(data, str))
+        #assert(isinstance(data, str))
         key, id = self.__sec_key(data)
         return key, id, aes(key, data)
     
