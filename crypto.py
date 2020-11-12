@@ -42,6 +42,7 @@ from hashlib import sha256
 from tools import clean_string
 import struct
 import logging
+import base64
 
 
 class HashError(Exception):
@@ -138,11 +139,11 @@ class SHA256d(object):
         self.h = sha256()
         self.truncate_to = truncate_to
         if data:
-            self.h.update(data)
+            self.h.update(data.encode('utf-8'))
     
     def update(self, data):
         assert(isinstance(data, str))
-        self.h.update(data)
+        self.h.update(base64.b64encode(data))
 
     def digest(self):
         return sha256(self.h.digest()).digest()[:self.truncate_to]
@@ -202,6 +203,7 @@ class ConvergentEncryption(object):
             Args
                 data: string
         """
+        print(type(data))
         h = SHA256d(data)
         if not self.__convergence_secret:
             self.__warn_convergence()
@@ -224,6 +226,7 @@ class ConvergentEncryption(object):
                 ciphertext: enc(key, block)
         """
         #assert(isinstance(data, str))
+        print(data)
         key, id = self.__sec_key(data)
         return key, id, aes(key, data)
     
